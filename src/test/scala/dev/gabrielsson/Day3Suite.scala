@@ -1,5 +1,7 @@
 package dev.gabrielsson
 
+import dev.gabrielsson.GridExtensions.GridCharSeq
+import dev.gabrielsson.Points.Point
 import org.junit.runner.RunWith
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -20,5 +22,10 @@ class Day3Suite extends AnyFlatSpec with Matchers {
   }
   it should "part2" in {
     day.part2(day.getRaw) shouldBe -1
+  }
+
+  it should "find numbers" in {
+    val grid = "..123..".toList.toGrid
+    Integer.parseInt(new String(day.pointsOfNumberContainingPoint(Point(4, 0), grid).map(grid(_)).toArray)) shouldBe 123
   }
 }

@@ -16,7 +16,7 @@ class Day3 extends Inputs {
 
     println("allpoints with symbol" + allPointsWithSymbol)
 
-    val allPoints = allPointsWithSymbol.map(p => allAdjecentNumbers(p._1, grid))
+    val allPoints = allPointsWithSymbol.map(p => pointsOfNumberContainingPoint(p._1, grid))
 
     allPoints.toSet.toList
       .map((points: Set[Point]) => points.toList.map(p => grid(p)))
@@ -25,7 +25,14 @@ class Day3 extends Inputs {
       .sum
   }
 
-  def allAdjecentNumbers(p: Point, grid: Grid[Char]): Set[Point] = {
+  /**
+   * Grid of "...123..." and sending in Point(5,0)
+   * would return Point(4,0) Point(5,0) Point(6,0)
+   * @param p
+   * @param grid
+   * @return Set of points forming a number
+   */
+  def pointsOfNumberContainingPoint(p: Point, grid: Grid[Char]): Set[Point] = {
     val leftList = (1 to 100).takeWhile(i => grid.get(Point(p.x - i, p.y)).exists(_.isDigit))
       .map(i => Point(p.x - i, p.y))
 
@@ -49,7 +56,7 @@ class Day3 extends Inputs {
         (t._1, pointsWithNumbers)
       })
       .map(gearNumbers => {
-        (gearNumbers._1, gearNumbers._2.map(p => allAdjecentNumbers(p, grid)))
+        (gearNumbers._1, gearNumbers._2.map(p => pointsOfNumberContainingPoint(p, grid)))
       })
 
     allPoints.toSet.toList
