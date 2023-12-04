@@ -16,12 +16,10 @@ class Day3 extends Inputs {
 
     println("allpoints with symbol" + allPointsWithSymbol)
 
-    val allPoints = allPointsWithSymbol.map(p => pointsOfNumberContainingPoint(p._1, grid))
+    val allPoints: Map[Set[Point], Int]= allPointsWithSymbol.map(p => pointsOfNumberContainingPoint(p._1, grid))
 
-    allPoints.toSet.toList
-      .map((points: Set[Point]) => points.toList.map(p => grid(p)))
-      .map(s => new String(s.toArray))
-      .map(s => Integer.parseInt(s))
+    allPoints
+      .values
       .sum
   }
 
@@ -32,7 +30,7 @@ class Day3 extends Inputs {
    * @param grid
    * @return Set of points forming a number
    */
-  def pointsOfNumberContainingPoint(p: Point, grid: Grid[Char]): Set[Point] = {
+  def pointsOfNumberContainingPoint(p: Point, grid: Grid[Char]): (Set[Point], Int) = {
     val leftList = (1 to 100).takeWhile(i => grid.get(Point(p.x - i, p.y)).exists(_.isDigit))
       .map(i => Point(p.x - i, p.y))
 
@@ -43,7 +41,8 @@ class Day3 extends Inputs {
 
     val finalList = (leftList ++ rightList :+ p).sortBy(_.x).toSet
 
-    finalList
+    (finalList,     Integer.parseInt(new String(finalList.map(grid(_)).toArray)))
+
   }
 
   def part2(input: String): Int = {
@@ -51,24 +50,18 @@ class Day3 extends Inputs {
 
     val allGearPoints = grid.filter(t => t._2 == '*')
 
-    val allPoints = allGearPoints.map(t => {
+    val allPoints: Map[Point, Map[Set[Point], Int]] = allGearPoints.map(t => {
         val pointsWithNumbers: Seq[Point] = t._1.surroundings.filter(p => grid.get(p).exists(c => c.isDigit))
         (t._1, pointsWithNumbers)
       })
       .map(gearNumbers => {
-        (gearNumbers._1, gearNumbers._2.map(p => pointsOfNumberContainingPoint(p, grid)))
+        (gearNumbers._1, gearNumbers._2.map(p => pointsOfNumberContainingPoint(p, grid)).toMap)
       })
 
-    allPoints.toSet.toList
-      .map((t: (Point, Seq[Set[Point]])) => (t._1, t._2.toSet))
+    allPoints
+      .map((t: (Point, Map[Set[Point], Int])) => (t._1, t._2.toSet))
       .filter(t => t._2.size == 2)
-      .map(t => (t._1, t._2
-        .map(_.toList.map(p => grid(p)))
-        .map(chars => new String(chars.toArray))
-        .map(s => Integer.parseInt(s)))
-      )
-      .map(t => (t._1, t._2.product))
-      .map(t => t._2)
+      .map(t => t._2.map(_._2).product)
       .sum
   }
 }

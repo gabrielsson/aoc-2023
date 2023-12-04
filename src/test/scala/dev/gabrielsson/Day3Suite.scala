@@ -26,6 +26,8 @@ class Day3Suite extends AnyFlatSpec with Matchers {
 
   it should "find numbers" in {
     val grid = "..123..".toList.toGrid
-    Integer.parseInt(new String(day.pointsOfNumberContainingPoint(Point(4, 0), grid).map(grid(_)).toArray)) shouldBe 123
+    val finalList = day.pointsOfNumberContainingPoint(Point(4, 0), grid)
+
+    finalList._2 shouldBe 123
   }
 }
