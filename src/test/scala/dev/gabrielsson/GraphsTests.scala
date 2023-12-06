@@ -31,7 +31,7 @@ class GraphsTests extends AnyFlatSpec with Matchers {
       """1991
         |2991
         |2222""".stripMargin.toList.toIntGrid
-    val goal = Point(3,2)
+    val goal = Point(3, 2)
     val heuristicFunction: Point => Int = _ manhattan goal
 
     val neighborsFunction = (p: Point) => p.neighbors.filter(n => grid.contains(n))
@@ -44,9 +44,9 @@ class GraphsTests extends AnyFlatSpec with Matchers {
       """1991
         |2991
         |2222""".stripMargin.toList.toIntGrid
-    val neighborsFunction = (p:Point) => p.neighbors.filter(n => grid.contains(n))
+    val neighborsFunction = (p: Point) => p.neighbors.filter(n => grid.contains(n))
 
-    val costBetweenPoints = (from:Point, to:Point) => grid(to)
+    val costBetweenPoints = (from: Point, to: Point) => grid(to)
 
     Graphs.dijkstra(Position.zero, Point(3, 2))(neighborsFunction)(costBetweenPoints)._2.get._2 shouldBe 10
   }
@@ -60,7 +60,7 @@ class GraphsTests extends AnyFlatSpec with Matchers {
       p => p.neighbors.filter(n => grid.contains(n)).filter(n => grid(n) == '.')
     }
 
-    val path = Graphs.bfs(Position.zero)(neighborsFunction).map(t => (t._2, t._1))
+    val path = Graphs.bfsQueue(Position.zero)(neighborsFunction).map(t => (t._2, t._1))
     path(0) shouldBe Point(0, 0)
     path(1) shouldBe Point(0, 1)
     path(2) shouldBe Point(1, 1)
@@ -78,13 +78,14 @@ class GraphsTests extends AnyFlatSpec with Matchers {
       p => p.neighbors.filter(n => grid.contains(n)).filter(n => grid(n) != '#')
     }
 
-    val path = Graphs.dfs(Position.zero)(neighborsFunction).toList.reverse
-    path.head shouldBe Point(0, 0)
-    path(1) shouldBe Point(0, 1)
-    path(2) shouldBe Point(1, 1)
-    path(3) shouldBe Point(1, 2)
-    path(4) shouldBe Point(2, 2)
-    path(5) shouldBe Point(3, 2)
+    val path = Graphs.dfsStack(Position.zero)(neighborsFunction).toList.reverse
+    path should contain theSameElementsAs Vector(
+      Point(0, 0),
+      Point(0, 1),
+      Point(1, 1),
+      Point(1, 2),
+      Point(2, 2),
+      Point(3, 2))
   }
 
   it should "print canvas" in {
@@ -104,9 +105,9 @@ class GraphsTests extends AnyFlatSpec with Matchers {
     val grid =
       mutable.Map[Point, Char]()
 
-    grid(Point(-1,-1)) = 'A'
-    grid(Point(-1,-2)) = 'B'
-    grid(Point(-1,-3)) = 'C'
+    grid(Point(-1, -1)) = 'A'
+    grid(Point(-1, -2)) = 'B'
+    grid(Point(-1, -3)) = 'C'
     (0 to 7).map(x => Point(x, -3)).foreach(grid(_) = '-')
 
     grid.toMap.canvas('.')(v => v).reverse.foreach(a => {

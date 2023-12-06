@@ -18,6 +18,22 @@ object Graphs {
     }
   }
 
+  object dfsStack {
+    def apply[A](start: A)(neighborsFunction: A => Iterable[A]): Iterable[A] = {
+      val stack = mutable.Stack(start)
+      val seen = mutable.Set[A]()
+      while (stack.nonEmpty) {
+        val node = stack.pop()
+        if (seen.add(node)) {
+          for (neighbor <- neighborsFunction(node)) {
+            stack.push(neighbor)
+          }
+        }
+      }
+      seen
+    }
+  }
+
 
   object bfs {
     def apply[A](start: A)(neighborsFunction: A => Iterable[A]): Map[A, Int] = {
@@ -31,6 +47,31 @@ object Graphs {
       }
 
       _bfs(Map.empty, Map(start -> 0))
+    }
+  }
+
+  object bfsQueue {
+    def apply[A](start: A)(neighborsFunction: A => Iterable[A]): Map[A, Int] = {
+      val queue = mutable.Queue(start -> 0) // Queue to hold nodes with their level (distance from the start)
+      val seen = mutable.Map[A, Int]() // Map to hold seen nodes with their shortest path distance
+
+      while (queue.nonEmpty) {
+        val (currentNode, currentLevel) = queue.dequeue()
+
+        // If we haven't seen the node or found a shorter path, process it
+        if (!seen.contains(currentNode)) {
+          seen(currentNode) = currentLevel // Mark the node as seen with its level
+
+          // Enqueue all unseen neighbors
+          for (neighbor <- neighborsFunction(currentNode)) {
+            if (!seen.contains(neighbor)) {
+              queue.enqueue(neighbor -> (currentLevel + 1))
+            }
+          }
+        }
+      }
+
+      seen.toMap // Convert to immutable map before returning
     }
   }
 
