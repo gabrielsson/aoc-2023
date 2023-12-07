@@ -6,7 +6,6 @@ import scala.math.Ordering.Implicits.seqOrdering
 
 class Day7 extends Inputs {
 
-
   def part1(input: Seq[String]): Int = {
     val hands = input.map(Hand.withoutJokers)
     val totals = winningsByHand(hands)
@@ -19,16 +18,17 @@ class Day7 extends Inputs {
     totals.sum
   }
 
-  def winningsByHand(hands: Seq[Hand]) = {
+  private def winningsByHand(hands: Seq[Hand]) = {
     hands
       .sortBy(_.cardStrengths).reverse
       .sortBy(_.handStrength()).zipWithIndex
       .tapEach(t => println(s"${t._1.cards} ${t._1.bet} * ${(t._2 + 1)} = ${t._1.bet * (t._2 + 1)}"))
       .map(t => t._1.bet * (t._2 + 1))
   }
+
   case class Hand(hand: Map[Char, Int], cardStrengths: Seq[Int], bet: Int, numberOfJokers: Int = 0, cards: String = "") {
     def handStrength(): Int = {
-      val max = if (hand.isEmpty) numberOfJokers else hand.filterNot(_._1 == 'J').values.max + numberOfJokers
+      val max = hand.values.maxOption.getOrElse(0) + numberOfJokers
 
       max match {
         case 5 => 7
@@ -46,15 +46,14 @@ class Day7 extends Inputs {
 
   object Hand {
     def withoutJokers(s: String): Hand = {
+      val allCards = Seq('A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2').zipWithIndex.toMap
+
       val a = s.split(" ")
       val hand = mutable.Map[Char, Int]().withDefaultValue(0)
       val cards = a(0).toCharArray
       cards.foreach(c => {
         hand(c) += 1
       })
-
-      val allCards = Seq('A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2').zipWithIndex.toMap
-
 
       val cardStrengths: Seq[Int] = cards.map(allCards).toSeq
 
@@ -62,6 +61,8 @@ class Day7 extends Inputs {
     }
 
     def withJokers(s: String): Hand = {
+      val allCards = Seq('A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J').zipWithIndex.toMap
+
       val a = s.split(" ")
       val hand = mutable.Map[Char, Int]().withDefaultValue(0)
       val cards = a(0).toCharArray
@@ -69,13 +70,9 @@ class Day7 extends Inputs {
         hand(c) += 1
       })
 
-      val allCards = Seq('A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J').zipWithIndex.toMap
-
       val numberOfJokers = hand('J')
-
       val cardStrengths: Seq[Int] = cards.map(allCards).toSeq
-
-      Hand(hand.toMap, cardStrengths, a(1).toInt, numberOfJokers, a(0))
+      Hand(hand.toMap.filterNot(_._1 == 'J'), cardStrengths, a(1).toInt, numberOfJokers, a(0))
     }
   }
 }
