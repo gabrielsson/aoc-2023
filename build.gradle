@@ -29,7 +29,7 @@ dependencies {
 
     // Use Scalatest for testing our library
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.scalatest:scalatest_2.13:3.2.13'
+    testImplementation 'org.scalatest:scalatest_2.13:3.3.0-SNAP4'
     testImplementation 'org.scalatestplus:junit-4-13_2.13:3.2.2.0'
     implementation 'org.scala-lang.modules:scala-parallel-collections_2.13:1.0.4'
 
