@@ -23,20 +23,11 @@ class Day7Suite extends AnyFlatSpec with Matchers {
   }
 
   it should "test card strength" in {
-
-    val c1 = Map(
-      'A' -> 1,
-
-
-      )
-
-    day.cardStrength(c1, 4) shouldBe 7
-    val c2 = Map(
-      '1' -> 1,
-      '2' -> 1
-
-
-    )
-    day.cardStrength(c2, 3) shouldBe 6
+    day.Hand.withJokers("AAKK9 1").handStrength() shouldBe 3
+    day.Hand.withJokers("AAKJ9 2").handStrength() shouldBe 4
+    day.Hand.withJokers("AAKQ9 3").handStrength() shouldBe 2
+    day.Hand.withJokers("AQKT9 4").handStrength() shouldBe 1
+    day.Hand.withJokers("JJAAA 4").handStrength() shouldBe 7
+    day.Hand.withoutJokers("JJAAA 4").handStrength() shouldBe 5
   }
 }
