@@ -16,7 +16,7 @@ class Day3 extends Inputs {
 
     println("allpoints with symbol" + allPointsWithSymbol)
 
-    val allPoints: Map[Set[Point], Int]= allPointsWithSymbol.map(p => pointsOfNumberContainingPoint(p._1, grid))
+    val allPoints: Map[Set[Point], Int] = allPointsWithSymbol.map(p => pointsOfNumberContainingPoint(p._1, grid))
 
     allPoints
       .values
@@ -26,6 +26,7 @@ class Day3 extends Inputs {
   /**
    * Grid of "...123..." and sending in Point(5,0)
    * would return Point(4,0) Point(5,0) Point(6,0)
+   *
    * @param p
    * @param grid
    * @return Set of points forming a number
@@ -41,7 +42,7 @@ class Day3 extends Inputs {
 
     val finalList = (leftList ++ rightList :+ p).sortBy(_.x).toSet
 
-    (finalList,     Integer.parseInt(new String(finalList.map(grid(_)).toArray)))
+    (finalList, Integer.parseInt(new String(finalList.map(grid(_)).toArray)))
 
   }
 

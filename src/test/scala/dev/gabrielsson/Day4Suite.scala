@@ -10,15 +10,15 @@ class Day4Suite extends AnyFlatSpec with Matchers {
   val day = new Day4
 
   it should "part1Test" in {
-    day.part1(day.getTestInput) shouldBe -1
+    day.part1(day.getTestInput) shouldBe 13
   }
   it should "part1" in {
-    day.part1(day.getInput) shouldBe -1
+    day.part1(day.getInput) shouldBe 23235
   }
   it should "part2Test" in {
-    day.part2(day.getTestInput) shouldBe -1
+    day.part2(day.getTestInput) shouldBe 30
   }
   it should "part2" in {
-    day.part2(day.getInput) shouldBe -1
+    day.part2(day.getInput) shouldBe 5920640
   }
 }

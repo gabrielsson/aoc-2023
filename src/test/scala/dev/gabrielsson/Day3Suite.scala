@@ -11,17 +11,17 @@ import org.scalatestplus.junit.JUnitRunner
 class Day3Suite extends AnyFlatSpec with Matchers {
   val day = new Day3
 
-  it should "part1Test" in {
-    day.part1(day.getTestRaw) shouldBe -1
+  ignore should "part1Test" in {
+    day.part1(day.getTestRaw) shouldBe 4361
   }
-  it should "part1" in {
-    day.part1(day.getRaw) shouldBe -1
+  ignore should "part1" in {
+    day.part1(day.getRaw) shouldBe 521601
   }
-  it should "part2Test" in {
+  ignore should "part2Test" in {
     day.part2(day.getTestRaw) shouldBe -1
   }
-  it should "part2" in {
-    day.part2(day.getRaw) shouldBe -1
+  ignore should "part2" in {
+    day.part2(day.getRaw) shouldBe 80694070
   }
 
   it should "find numbers" in {

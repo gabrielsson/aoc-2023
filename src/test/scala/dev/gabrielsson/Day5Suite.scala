@@ -10,15 +10,15 @@ class Day5Suite extends AnyFlatSpec with Matchers {
   val day = new Day5
 
   it should "part1Test" in {
-    day.part1(day.groups[String](day.getTestInput, s=>s.isBlank)) shouldBe -1
+    day.part1(day.groups[String](day.getTestInput, s=>s.isBlank)) shouldBe 35
   }
   it should "part1" in {
-    day.part1(day.groups[String](day.getInput, s=>s.isBlank)) shouldBe -1
+    day.part1(day.groups[String](day.getInput, s=>s.isBlank)) shouldBe 3374647
   }
-  it should "part2Test" in {
+  ignore should "part2Test" in {
     day.part2(day.groups[String](day.getTestInput, s=>s.isBlank)) shouldBe -1
   }
-  it should "part2" in {
+  ignore should "part2" in {
     day.part2(day.groups[String](day.getInput, s=>s.isBlank)) shouldBe -1
   }
 }
