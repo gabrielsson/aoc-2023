@@ -19,11 +19,10 @@ class Day8 extends Inputs {
       val start = n
       val endFunc = (node: String) => node.endsWith("Z")
       traverse(start)(endFunc)(nextFunc)
-
     })
 
-    results.map(_.toLong).tail
-      .foldLeft(results.head.toLong)((a, b) => lcm(a, b))
+    results.map(_.toLong)
+      .reduce(lcm)
   }
 
   private def extractNodes(row: String): Iterator[String] =
