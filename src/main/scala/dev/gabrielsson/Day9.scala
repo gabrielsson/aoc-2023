@@ -13,15 +13,16 @@ class Day9 extends Inputs {
       .map(extrapolateNext)
       .sum
 
-  private final def extrapolateNext(se: Seq[Long]): Long =
-    if (se.forall(_ == se.head)) {
-      se.last
+  private final def extrapolateNext(longs: Seq[Long]): Long = {
+    if (longs.distinct.length == 1) {
+      longs.head
     } else {
-      val res = se.sliding(2).map(s => {
+      val res = longs.sliding(2).map(s => {
         s(1) - s.head
       }).toSeq
-      se.last + extrapolateNext(res)
+      longs.last + extrapolateNext(res)
     }
+  }
 
   private def extractListOfNumbers(input: Seq[String]): Seq[Seq[Long]] =
     input

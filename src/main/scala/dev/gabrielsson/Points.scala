@@ -6,7 +6,7 @@ object Points {
 
     def +(p: Point): Point = Point(x + p.x, y + p.y)
 
-    def -(p: Point): Point = Point(x - p.y, y - p.y)
+    def -(p: Point): Point = Point(x - p.x, y - p.y)
 
     def *(n: Int): Point = Point(x * n, y * n)
 
