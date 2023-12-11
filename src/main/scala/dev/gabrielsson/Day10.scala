@@ -55,7 +55,7 @@ class Day10 extends Inputs {
     val start = grid.find(_._2 == 'S').get
     val costBetweenPoints = (from: Point, to: Point) => from.manhattan(to)
 
-    val res = Graphs.dijkstra(start._1, start._1)(neighborsFunction)(costBetweenPoints)
+    val res = Graphs.dijkstra(start._1, Point(-1,-1))(neighborsFunction)(costBetweenPoints)
 
 
     println(res)
@@ -112,18 +112,18 @@ class Day10 extends Inputs {
     val start = grid.find(_._2 == 'S').get
     val costBetweenPoints = (from: Point, to: Point) => from.manhattan(to)
 
-    val res = Graphs.dijkstra(start._1, Point(-1,-1))(neighborsFunction)(costBetweenPoints)
+    val res = Graphs.dijkstra(start._1, Point(-1, -1))(neighborsFunction)(costBetweenPoints)
     val visited = res._1.keys.toList
     val notVisited = (grid -- visited).keys.toList
 
 
-    val onlyRealGrid = grid.map(t => if(visited.contains(t._1)) {
+    val onlyRealGrid = grid.map(t => if (visited.contains(t._1)) {
       t
     } else {
-      (t._1, ' ')
+      (t._1, '.')
     })
     onlyRealGrid
-      .canvas('.'){
+      .canvas('.') {
         case '-' => '═'
         case '|' => '║'
         case '7' => '╗'
@@ -133,9 +133,9 @@ class Day10 extends Inputs {
         case 'S' => 'S'
         case _ => ' '
       }.foreach(a => {
-      a.foreach(print)
-      print("\n")
-    })
+        a.foreach(print)
+        print("\n")
+      })
 
     val rightDots = mutable.Set[Point]()
     val leftDots = mutable.Set[Point]()
@@ -168,12 +168,12 @@ class Day10 extends Inputs {
       currentPos = nextPos.copy(dir = nextDir)
 
 
-    } while (onlyRealGrid(currentPos.p)!='S')
+    } while (onlyRealGrid(currentPos.p) != 'S')
 
 
     println()
     println()
-    val allConnected:Iterable[Point] = leftDots.flatMap(p => {
+    val allConnected: Iterable[Point] = leftDots.flatMap(p => {
 
       dfs(p)(p => p.surroundings.filter(onlyRealGrid.contains).filter(s => onlyRealGrid(s) == '.'))
     })
@@ -203,8 +203,6 @@ class Day10 extends Inputs {
         a.foreach(print)
         print("\n")
       })
-
-
 
 
     allConnected.size
