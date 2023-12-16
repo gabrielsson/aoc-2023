@@ -9,20 +9,18 @@ class Day15 extends Inputs {
       .split(",")
       .map(Instruction.hashAlgo).sum
 
-  def part2(input: String): Int = {
+  def part2(input: String): Int =
     input.split(",")
       .map(Instruction.fromString)
-      .foldLeft(Map[Int, List[Instruction]]().withDefaultValue(List.empty))((boxes, instr) => instr(boxes))
+      .foldLeft(Map.empty[Int, List[Instruction]])((boxes, instr) => instr(boxes))
       .flatMap { case (boxId, values) =>
         calculateFinalScore(boxId, values)
       }.sum
-  }
 
-  private def calculateFinalScore(boxId: Int, values: List[Instruction]): List[Int] = {
+  private def calculateFinalScore(boxId: Int, values: List[Instruction]): List[Int] =
     values.zipWithIndex.map { case (value, index) =>
       (boxId + 1) * (index + 1) * value.focalLength
     }
-  }
 }
 
 trait Instruction {
@@ -32,7 +30,7 @@ trait Instruction {
 
   def focalLength: Int
 
-  def boxId: Int
+  def boxId: Int = hashAlgo(label)
 
   def apply(boxes: Map[Int, List[Instruction]]): Map[Int, List[Instruction]]
 }
@@ -43,8 +41,7 @@ object Instruction {
 
   def fromString(chars: String): Instruction = {
     if (chars.contains("-")) {
-      val ns = chars.split("-")
-      MinusInstruction(ns(0))
+      MinusInstruction(chars.split("-")(0))
     } else {
       val split = chars.indexOf("=")
       EqualInstruction(chars.substring(0, split), chars.substring(split + 1).toInt)
@@ -55,9 +52,7 @@ object Instruction {
 case class EqualInstruction(label: String, focalLength: Int) extends Instruction {
   val operation: Char = '='
 
-  override def boxId: Int = hashAlgo(label)
-
-  override def apply(boxes: Map[Int, List[Instruction]]): Map[Int, List[Instruction]] = {
+  override def apply(boxes: Map[Int, List[Instruction]]): Map[Int, List[Instruction]] =
     boxes.updatedWith(boxId) {
       case Some(existingInstructions) =>
         val index = existingInstructions.indexWhere(_.label == label)
@@ -69,19 +64,15 @@ case class EqualInstruction(label: String, focalLength: Int) extends Instruction
       case None =>
         Some(List(this))
     }
-  }
 }
 
 case class MinusInstruction(label: String) extends Instruction {
   val operation: Char = '-'
   val focalLength: Int = 0
 
-  override def boxId: Int = hashAlgo(label)
-
-  override def apply(boxes: Map[Int, List[Instruction]]): Map[Int, List[Instruction]] = {
+  override def apply(boxes: Map[Int, List[Instruction]]): Map[Int, List[Instruction]] =
     boxes.updatedWith(boxId) {
       case Some(existingInstructions) => Some(existingInstructions.filter(_.label != label))
       case None => None
     }
-  }
 }

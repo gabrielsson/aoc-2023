@@ -58,6 +58,7 @@ object Points {
   }
 
   case class Dir(p: Point, dir: Char) {
+
     def forward(n: Int = 1): Dir = dir match {
       case 'U' | 'N' => copy(p = p.copy(y = p.y - n))
       case 'D' | 'S' => copy(p = p.copy(y = p.y + n))
@@ -66,16 +67,16 @@ object Points {
     }
 
     def rotate(clockwise: Boolean = true, n: Int = 0): Dir = dir match { // turn and move
-      case 'U' => if (clockwise) Dir(Point(p.x + n, p.y), 'R') else Dir(Point(p.x - n, p.y), 'L')
-      case 'D' => if (clockwise) Dir(Point(p.x - n, p.y), 'L') else Dir(Point(p.x + n, p.y), 'R')
-      case 'L' => if (clockwise) Dir(Point(p.x, p.y - n), 'U') else Dir(Point(p.x, p.y + n), 'D')
-      case 'R' => if (clockwise) Dir(Point(p.x, p.y + n), 'D') else Dir(Point(p.x, p.y - n), 'U')
+      case 'N' => if (clockwise) Dir(Point(p.x + n, p.y), 'E') else Dir(Point(p.x - n, p.y), 'W')
+      case 'S' => if (clockwise) Dir(Point(p.x - n, p.y), 'W') else Dir(Point(p.x + n, p.y), 'E')
+      case 'W' => if (clockwise) Dir(Point(p.x, p.y - n), 'N') else Dir(Point(p.x, p.y + n), 'S')
+      case 'E' => if (clockwise) Dir(Point(p.x, p.y + n), 'S') else Dir(Point(p.x, p.y - n), 'N')
     }
 
     def turn(d: Char): Dir = copy(dir = d)
 
     def turn(degrees: Int): Dir = {
-      val dirs = Seq('U', 'R', 'D', 'L')
+      val dirs = Seq('N', 'E', 'S', 'W')
       val deg = (degrees.abs / 90) % 360
       val i = dirs.indexOf(dir) + (if (degrees < 0) dirs.length - deg else deg)
       copy(dir = dirs(i % dirs.length))
