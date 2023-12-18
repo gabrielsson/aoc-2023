@@ -36,7 +36,7 @@ class GraphsTests extends AnyFlatSpec with Matchers {
 
     val neighborsFunction = (p: Point) => p.neighbors.filter(n => grid.contains(n))
     val costOfTransportingFromAtoB = (a: Point, b: Point) => grid(b)
-    Graphs.aStar(Position.zero, goal)(costOfTransportingFromAtoB)(neighborsFunction)(heuristicFunction)._2.get._2 shouldBe 10
+    Graphs.aStar(Some(Position.zero))(p => p == goal)(costOfTransportingFromAtoB)(neighborsFunction)(heuristicFunction)._2.get._2 shouldBe 10
   }
 
   it should "dijkstra" in {

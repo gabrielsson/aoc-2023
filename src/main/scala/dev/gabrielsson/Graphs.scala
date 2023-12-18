@@ -76,24 +76,25 @@ object Graphs {
   }
 
   object aStar {
-    def apply[A](start: A, goal: A)
+    def apply[A](starts: Iterable[A])
+                (goalFunction: A => Boolean)
                 (costFunction: (A, A) => Int)
                 (neighborsFunction: A => Iterable[A])
-                (heuristicFunction: A => Int): (Map[A, Int], Option[(A, Int)]) = {
-      val seen: mutable.Map[A, Int] = mutable.Map.empty
-      val unseen: mutable.PriorityQueue[(Int, Int, A)] =
+                (heuristicFunction: A => Int):  (Map[A, (Int, Iterable[A])], Option[(A, (Int, Iterable[A]))]) = {
+      val seen: mutable.Map[A, (Int, Iterable[A])] = mutable.Map.empty
+      val unseen: mutable.PriorityQueue[(Int, Int, A, Iterable[A])] =
         mutable.PriorityQueue.empty(Ordering.by(-_._1))
-      unseen.enqueue((heuristicFunction(start), 0, start))
+      starts.foreach(start => unseen.enqueue((heuristicFunction(start), 0, start, Seq(start))))
       while (unseen.nonEmpty) {
-        val (_, dist, node) = unseen.dequeue()
+        val (_, dist, node, ps) = unseen.dequeue()
         if (!seen.contains(node)) {
-          seen(node) = dist
-          if (node == goal) {
-            return (seen.toMap, Some(node -> dist))
+          seen(node) = (dist, ps)
+          if (goalFunction(node)) {
+            return (seen.toMap, Some(node -> (dist, ps)))
           } else {
             def visit(n: A, d: Int) =
               if (!seen.contains(n)) {
-                unseen.enqueue((dist + d + heuristicFunction(n), dist + d, n))
+                unseen.enqueue((dist + d + heuristicFunction(n), dist + d, n, ps ++ Seq(n)))
               }
 
             neighborsFunction(node).map(n => (n, costFunction(node, n))).foreach(n => visit(n._1, n._2))
